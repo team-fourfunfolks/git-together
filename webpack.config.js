@@ -4,12 +4,14 @@ const path = require('path');
 module.exports = {
 	devtool: 'inline-source-map',
 	entry: [
-		'webpack-hot-middleware/client',
+		'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
 		"./src/app.js"
 	],
 	output: {
 		path: path.resolve('./dist'),
-		filename: "bundle.js"
+		filename: "bundle.js",
+		// Need to set publicPath to local host to update changes in both local and electron
+		publicPath: 'http://localhost:3000/static/'
 	},
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
