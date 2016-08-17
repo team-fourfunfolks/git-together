@@ -35,9 +35,6 @@ class App extends Component {
       	<div className="myDiv">
       	  <h1>Hello Electron!</h1>
 
-      	  <input type="text" />
-      	  <input type="submit" className="github-button"/>
-
       	  <a href="/auth/github">Login /w Github</a>
       	</div>
       </div>
