@@ -4,15 +4,13 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
-const remote = require('electron').remote;
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600, show: true, 'node-integration': false})
+  mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // REMOVE /dist WHEN READY TO DEPLOY
   // and load the index.html of the app.
