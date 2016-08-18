@@ -79,5 +79,5 @@ app.get('/auth/github/callback',function (req, res) {
       token: accessToken
     });
   });
-  res.redirect('home');
+  res.redirect('/');
 });
