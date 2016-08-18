@@ -6,8 +6,23 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
+const server = app.listen(3000);
+const io = require('socket.io').listen(server);
+
 // hands this compiler off to the middleware for hot reloading
 const compiler = webpack(config);
+var data = JSON.stringify([{name: 'steve', message: 'commit message by steve'}, {name: 'sarah', message: 'commit message'}]);
+var data2 = JSON.stringify([{name: 'colin', message: 'colin commit message'}, {name: 'binh', message: 'binh commit message'}]);
+
+app.post('/postman', function(req, res) {
+	res.send("hello");
+	io.emit('test', data);
+});
+
+app.post('/postman2', function(req, res) {
+	res.send("hello2");
+	io.emit('test', data2);
+});
 
 app.use(webpackDevMiddleware(compiler, {
 	noInfo: true,
@@ -18,27 +33,25 @@ app.use(webpackHotMiddleware(compiler));
 
 app.use(express.static('./dist'));
 
-const server = app.listen(3000);
-const io = require('socket.io').listen(server);
 
 
-const connections = [];
-const title = 'Untitled Presentation';
+// const connections = [];
+// const title = 'Untitled Presentation';
 io.sockets.on('connection', function (socket) {
-
-	socket.once('disconnect', function() {
-		connections.splice(connections.indexOf(socket), 1);
-		socket.disconnect();
-		console.log("Disconnected: %s sockets remaining.", connections.length);
+	console.log("connected on backend");
+	// socket.once('disconnect', function() {
+	// 	connections.splice(connections.indexOf(socket), 1);
+	// 	socket.disconnect();
+	// 	console.log("Disconnected: %s sockets remaining.", connections.length);
 	});
 
-	socket.emit('welcome', {
-		title: title
-	});
+	// socket.emit('welcome', {
+	// 	title: title
+	// });
 
-	connections.push(socket);
-    console.log("Connected: %s sockets connected.", connections.length);
-});
+// 	connections.push(socket);
+//     console.log("Connected: %s sockets connected.", connections.length);
+// });
 
 console.log("Polling server is running at 'http://localhost:3000'");
 
@@ -76,7 +89,7 @@ passport.use(new GitHubStrategy({
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
     process.nextTick(function () {
-      
+
       // To keep the example simple, the user's GitHub profile is returned to
       // represent the logged-in user.  In a typical application, you would want
       // to associate the GitHub account with a user record in your database,
@@ -105,7 +118,7 @@ app.get('/auth/github',
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function will be called,
 //   which, in this example, will redirect the user to the home page.
-app.get('/auth/github/callback', 
+app.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/');
