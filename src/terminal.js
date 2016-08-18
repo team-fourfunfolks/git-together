@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Terminal from 'xterm';
-import {ipcRenderer} from 'electron-prebuilt'
-
 
 class Term extends Component {
+
+
 	componentDidMount() {
 		this.loadTerminal(ReactDOM.findDOMNode(this))
 	}
@@ -13,14 +12,25 @@ class Term extends Component {
 		const term = new Terminal({
 		});
 		term.cursorBlink = true;
-		if (term) console.log("yes term")
 		term.open(node);
-		term.prompt = function () {
+		ipcRenderer.once('terminal-start', (event, arg) => {
+			term.write(arg)
+		})
+
+		term.on('input', function(input) {
+			ipcRenderer.send('term-input', input)
+		})
+		
+		ipcRenderer.on('reply', (event, arg) => {
+			term.write(arg)
+		})
+		
+		term.prompt =  () => {
     	term.write('\r\n' + '$ ');
   	};
 		term.prompt();
 
-		term.on('key', function (key, ev) {
+		term.on('key', function(key, ev) {
 			var printable = (
 			!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey
 			);
@@ -43,7 +53,7 @@ class Term extends Component {
 		//let term = new terminal();
 		//term.fit();
 		return (
-			<div id="terminal" style={{backgroundColor: "#000"}} >
+			<div id="terminal" style={{backgroundColor: "#000", color: '#ddd'}} >
 			</div>
 		)
 	}
