@@ -35,7 +35,7 @@ class App extends Component {
       	<div className="myDiv">
       	  <h1>Hello Electron!</h1>
 
-      	  <a href="/auth/github">Login /w Github</a>
+      	  <a id="login" href="/auth/github">Login /w Github</a>
       	</div>
       </div>
     );
