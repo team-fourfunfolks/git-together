@@ -12,6 +12,11 @@ import io from 'socket.io-client';
 //let socket = io('http://188e4ab5.ngrok.io');
 //const {ipcRenderer} = require('electron')
 
+let Visualization = require ('./visualization');
+let Terminal = require ('./terminal');
+
+const {ipcRenderer} = require('electron');
+
 
 class App extends Component {
 	constructor(props) {
@@ -19,7 +24,7 @@ class App extends Component {
 		this.state = {
 			// status: 'disconnected',
       // title: '',
-			message: null
+			message: []
 		}
 
 		this.connect = this.connect.bind(this);
@@ -51,41 +56,24 @@ class App extends Component {
 
   }
 
-	handleData(data) {
+	handleData(dataObj) {
+		let data = JSON.parse(dataObj);
 		console.log("handledata", data);
-		this.setState({ message: data });
-		console.log("this state: " +this.state.message);
+		this.setState({ message: this.state.message.concat(data) });
 	}
 
 	render() {
-		// this.socket.on('test', function(data) {
-		// 	console.log('test in did mount in socket' + data);
-		// });
-		console.log("in render: "+this.state.message)
-		if (this.state.message === null) {
-			console.log("state is null");
-			return null
-		}
-		let obj = JSON.parse(this.state.message);
-		let commit = obj.map(function(info, i){
-			return (
-				<div key={i}>
-					<p>{ info.name }:</p>
-					<p>{ info.message }</p>
-    		</div>
-			)
-		});
-
     return (
-      <div>
-	  	<Term />
 
-      </div>
+			<div className="containing-div-all">
+				<h1>GIT TOGETHER</h1>
+      		<div className="containing-div">
+						<Visualization message={ this.state.message } />
+						<Terminal />
+      		</div>
+			</div>
     );
 	}
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('app')
-);
+ReactDOM.render(<App />, document.getElementById('app'));
