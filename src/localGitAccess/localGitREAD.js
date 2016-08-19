@@ -6,25 +6,25 @@ module.exports = {
 
    getFullLog: function(){
     simpleGit.log(function(err, log) {
-        console.log(log);
+        return log;
     })
   },
 
    getLatestLogMessage: function(){
     simpleGit.log(function(err, log) {
-        console.log(log.latest);
+        return log.latest;
     })
   },
 
    getCurrentBranch: function(){
     simpleGit.status(function(err, status){
-      console.log(status.current);
+      return status.current;
     })
   },
 
    getAllBranchNames: function(){
     simpleGit.branch(function(err, branches){
-      console.log(branches.all); //returns an array
+      return branches.all; //returns an array
     })
   }
 };

@@ -6,8 +6,8 @@ import '../scss/main.scss';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
-// let socket = io('http://localhost:3000');
-
+//let socket = io('http://188e4ab5.ngrok.io');
+const {ipcRenderer} = require('electron')
 
 
 
@@ -26,8 +26,9 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-    this.socket = io('c6086e45.ngrok.io');
+    this.socket = io('http://188e4ab5.ngrok.io');
     this.socket.on('connect', this.connect);
+
     // this.socket.on('disconnect', this.disconnect.bind(this));
 	}
 
@@ -46,12 +47,14 @@ class App extends Component {
 		this.socket.on('test', this.handleData);
 
 
+
   }
 
 	handleData(data) {
 		console.log("handledata", data);
 		this.setState({ message: data });
 		console.log("this state: " +this.state.message);
+		ipcRenderer.send('binh', data);
 	}
 
 	render() {

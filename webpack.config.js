@@ -16,6 +16,19 @@ module.exports = {
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+		new webpack.ExternalsPlugin('commonjs', [
+            'desktop-capturer',
+            'electron',
+            'ipc',
+            'ipc-renderer',
+            'native-image',
+            'remote',
+            'web-frame',
+            'clipboard',
+            'crash-reporter',
+            'screen',
+            'shell'
+        ]),
     // Won't run webpack if an error is found and fixed
     new webpack.NoErrorsPlugin()
 	],
