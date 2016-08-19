@@ -7,6 +7,11 @@ const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 
 // const fork = require('child-process').fork;
+const readGit = require('./src/localGitAccess/localGitREAD');
+//const child = require('child_process');
+
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {

@@ -31,11 +31,6 @@ Open a new tab
 ```
 npm run electron
 ```
-
-
-#### Run server-side environment
-
-	npm run server
 	
 #### Testing
 

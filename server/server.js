@@ -6,8 +6,23 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
+const server = app.listen(3000);
+const io = require('socket.io').listen(server);
+
 // hands this compiler off to the middleware for hot reloading
 const compiler = webpack(config);
+var data = JSON.stringify([{name: 'steve', message: 'commit message by steve'}, {name: 'sarah', message: 'commit message'}]);
+var data2 = JSON.stringify([{name: 'colin', message: 'colin commit message'}, {name: 'binh', message: 'binh commit message'}]);
+
+app.post('/postman', function(req, res) {
+	res.send("hello");
+	io.emit('test', data);
+});
+
+app.post('/postman2', function(req, res) {
+	res.send("hello2");
+	io.emit('test', data2);
+});
 
 app.use(webpackDevMiddleware(compiler, {
 	noInfo: true,
@@ -18,95 +33,65 @@ app.use(webpackHotMiddleware(compiler));
 
 app.use(express.static('./dist'));
 
-const server = app.listen(3000);
-const io = require('socket.io').listen(server);
+console.log("Polling server is running at 'http://localhost:3000'");
 
-
-const connections = [];
-const title = 'Untitled Presentation';
-io.sockets.on('connection', function (socket) {
-
-	socket.once('disconnect', function() {
-		connections.splice(connections.indexOf(socket), 1);
-		socket.disconnect();
-		console.log("Disconnected: %s sockets remaining.", connections.length);
-	});
-
-	socket.emit('welcome', {
-		title: title
-	});
-
-	connections.push(socket);
-    console.log("Connected: %s sockets connected.", connections.length);
+// Express test
+app.get('/', function(req, res) {
+  res.send('hello');
 });
 
-console.log("Polling server is running at 'http://localhost:3000'");
+
+io.sockets.on('connection', function (socket) {
+  console.log("connected on backend");
+
+  // Socket test
+  socket.once("echo", function (msg, callback) {
+    socket.emit("echo", msg);
+  });
+});
+
 
 
 
 /*************
 *** O Auth ***
 **************/
-const passport = require('passport');
-const GitHubStrategy = require('passport-github2').Strategy;
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-// O Auth Credentials
 const options = {
-	client_id: 'c0c337734c01396eb065',
-	client_secret: '78269c29c0295c9d2c9da5151ca361c7dc42f2d4',
-	scopes: 'user'
+  client_id: 'c0c337734c01396eb065',
+  client_secret: '78269c29c0295c9d2c9da5151ca361c7dc42f2d4'
 }
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
+var oauth = require("oauth").OAuth2;
+var OAuth2 = new oauth(options.client_id, options.client_secret, "https://github.com/", "login/oauth/authorize", "login/oauth/access_token");
+
+app.get('/auth/github',function(req,res){
+
+  res.writeHead(303, {
+    Location: OAuth2.getAuthorizeUrl({
+      redirect_uri: 'http://localhost:3000/auth/github/callback',
+      scope: "user,repo,gist"
+    })
+  });
+  res.end();
 });
 
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
 
-passport.use(new GitHubStrategy({
-    clientID: options.client_id,
-    clientSecret: options.client_secret,
-    callbackURL: "http://localhost:3000/auth/github/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-      
-      // To keep the example simple, the user's GitHub profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the GitHub account with a user record in your database,
-      // and return that user instead.
-      console.log(accessToken);
-      return done(null, profile);
+app.get('/auth/github/callback',function (req, res) {
+  var code = req.query.code;
+  OAuth2.getOAuthAccessToken(code, {}, function (err, access_token, refresh_token) {
+    if (err) {
+      console.log(err);
+    }
+    accessToken = access_token;
+    // authenticate github API
+    console.log("AccessToken: "+accessToken+"\n");
+    github.authenticate({
+      type: "oauth",
+      token: accessToken
     });
-  }
-));
-
-
-// GET /auth/github
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in GitHub authentication will involve redirecting
-//   the user to github.com.  After authorization, GitHub will redirect the user
-//   back to this application at /auth/github/callback
-app.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }),
-  function(req, res){
-    // The request will be redirected to GitHub for authentication, so this
-    // function will not be called.
   });
+  res.redirect('/');
+});
 
-// GET /auth/github/callback
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function will be called,
-//   which, in this example, will redirect the user to the home page.
-app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+
+module.exports = server;
