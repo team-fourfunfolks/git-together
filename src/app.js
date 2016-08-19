@@ -6,6 +6,7 @@ import '../scss/main.scss';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
+import { Button } from 'react-bootstrap';
 // let socket = io('http://localhost:3000');
 
 class App extends Component {
@@ -14,7 +15,7 @@ class App extends Component {
 		this.state = {
 			// status: 'disconnected',
       // title: '',
-			message: null
+			message: []
 		}
 
 		this.connect = this.connect.bind(this);
@@ -22,7 +23,7 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-    this.socket = io('http://c6086e45.ngrok.io');
+    this.socket = io('https://fa663fef.ngrok.io');
     this.socket.on('connect', this.connect);
     // this.socket.on('disconnect', this.disconnect.bind(this));
 	}
@@ -43,10 +44,11 @@ class App extends Component {
 
   }
 
-	handleData(data) {
+	handleData(dataObj) {
+		let data = JSON.parse(dataObj);
 		console.log("handledata", data);
-		this.setState({ message: data });
-		console.log("this state: " +this.state.message);
+		// console.log("this state: " +this.state.message);
+		this.setState({ message: this.state.message.concat(data) });
 	}
 
 	render() {
@@ -54,30 +56,38 @@ class App extends Component {
 		// 	console.log('test in did mount in socket' + data);
 		// });
 		console.log("in render: "+this.state.message)
-		if (this.state.message === null) {
-			console.log("state is null");
-			return null
+		let commit;
+			if (this.state.message !== []) {
+			let obj = this.state.message;
+			commit = obj.map(function(info, i){
+				return (
+					<div key={i}>
+						<p><b>{ info.name }:</b> { info.message }</p>
+	    		</div>
+				)
+			});
 		}
-		let obj = JSON.parse(this.state.message);
-		let commit = obj.map(function(info, i){
-			return (
-				<div key={i}>
-					<p>{ info.name }:</p>
-					<p>{ info.message }</p>
-    		</div>
-			)
-		});
+	else commit = null;
 
     return (
-      <div>
-      	<div className="myDiv">
-      	  <h1>Git Together</h1>
-					<div>
-						{ commit }
+			<div className="containing-div-all">
+				<h1>GIT TOGETHER</h1>
+      		<div className="containing-div">
+						<div className="panel panel-default commits-container">
+							<div className="panel-heading">
+								<h5 className="panel-title">Commit Visualization</h5>
+							</div>
+							<div className="panel-body"> { commit } </div>
+       			</div>
+
+						<div className="panel panel-default terminal-container">
+							<div className="panel-heading">
+								<h5 className="panel-title">Terminal Container</h5>
+							</div>
+							<div className="panel-body"></div>
+       			</div>
+      			</div>
 						</div>
-      	  {/* <a href="/auth/github">Login /w Github</a> */}
-      	</div>
-      </div>
     );
 	}
 }
