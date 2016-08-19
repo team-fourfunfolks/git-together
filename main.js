@@ -46,12 +46,3 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
-
-var lasLog = readGit.getLatestLogMessage();
-
-
-
-ipcMain.on('binh', (event, arg) => {
-  console.log(arg);
-})

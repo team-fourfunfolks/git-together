@@ -26,7 +26,7 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-    this.socket = io('http://188e4ab5.ngrok.io');
+    this.socket = io('http://localhost:3000');
     this.socket.on('connect', this.connect);
 
     // this.socket.on('disconnect', this.disconnect.bind(this));
@@ -54,7 +54,6 @@ class App extends Component {
 		console.log("handledata", data);
 		this.setState({ message: data });
 		console.log("this state: " +this.state.message);
-		ipcRenderer.send('binh', data);
 	}
 
 	render() {

@@ -16,6 +16,7 @@ module.exports = {
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+		//externalsPlugin added to allow Webpack to compile native electron modules
 		new webpack.ExternalsPlugin('commonjs', [
             'desktop-capturer',
             'electron',
