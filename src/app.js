@@ -22,7 +22,7 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-    this.socket = io('http://c6086e45.ngrok.io');
+    this.socket = io('c6086e45.ngrok.io');
     this.socket.on('connect', this.connect);
     // this.socket.on('disconnect', this.disconnect.bind(this));
 	}

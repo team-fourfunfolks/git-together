@@ -33,27 +33,22 @@ app.use(webpackHotMiddleware(compiler));
 
 app.use(express.static('./dist'));
 
-
-
-// const connections = [];
-// const title = 'Untitled Presentation';
-io.sockets.on('connection', function (socket) {
-	console.log("connected on backend");
-	// socket.once('disconnect', function() {
-	// 	connections.splice(connections.indexOf(socket), 1);
-	// 	socket.disconnect();
-	// 	console.log("Disconnected: %s sockets remaining.", connections.length);
-	});
-
-	// socket.emit('welcome', {
-	// 	title: title
-	// });
-
-// 	connections.push(socket);
-//     console.log("Connected: %s sockets connected.", connections.length);
-// });
-
 console.log("Polling server is running at 'http://localhost:3000'");
+
+
+app.get('/', function(req, res) {
+  res.send('hello');
+});
+
+
+io.sockets.on('connection', function (socket) {
+  console.log("connected on backend");
+
+  socket.on("echo", function (msg, callback) {
+    socket.emit("echo", msg);
+  });
+});
+
 
 
 
@@ -69,13 +64,14 @@ var oauth = require("oauth").OAuth2;
 var OAuth2 = new oauth(options.client_id, options.client_secret, "https://github.com/", "login/oauth/authorize", "login/oauth/access_token");
 
 app.get('/auth/github',function(req,res){
-   res.writeHead(303, {
-     Location: OAuth2.getAuthorizeUrl({
-       redirect_uri: 'http://localhost:3000/auth/github/callback',
-       scope: "user,repo,gist"
-     })
-    });
-    res.end();
+
+  res.writeHead(303, {
+    Location: OAuth2.getAuthorizeUrl({
+      redirect_uri: 'http://localhost:3000/auth/github/callback',
+      scope: "user,repo,gist"
+    })
+  });
+  res.end();
 });
 
 
@@ -95,3 +91,6 @@ app.get('/auth/github/callback',function (req, res) {
   });
   res.redirect('/');
 });
+
+
+module.exports = server;
