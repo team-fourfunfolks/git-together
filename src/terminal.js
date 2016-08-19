@@ -25,8 +25,8 @@ class Term extends Component {
 		// })
 		term.prompt();
 
-		ipcRenderer.on('reply', (event, arg) => {
-			term.write(arg);
+		ipcRenderer.on('reply', (event, stdout) => {
+			term.write(stdout);
 			term.prompt();
 		})
 
@@ -37,11 +37,9 @@ class Term extends Component {
 			!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey
 			);
 			if (ev.keyCode === 13) {
-				term.prompt();
-				console.log(str)				
+				term.prompt();			
 				ipcRenderer.send('term-input', str)
-				str = '';
-				console.log(str)			
+				str = '';	
 			}
       		else if (ev.keyCode === 8) {
 		  		if (str.length) {
