@@ -5,6 +5,9 @@ import '../scss/main.scss';
 import io from 'socket.io-client';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import Term from './terminal.js'
+
+//Term.test()
 
 class App extends Component {
 	constructor(props) {
@@ -32,11 +35,7 @@ class App extends Component {
 	render() {
     return (
       <div>
-      	<div className="myDiv">
-      	  <h1>Hello Electron!</h1>
-
-      	  <a href="/auth/github">Login /w Github</a>
-      	</div>
+	  	<Term />
       </div>
     );
 	}

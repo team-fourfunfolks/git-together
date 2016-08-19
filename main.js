@@ -1,15 +1,15 @@
 const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const app = electron.app;
+const ipcMain = require('electron').ipcMain;
+const BrowserWindow = electron.BrowserWindow;
+// const exec = require('child-process').exec;
+const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+// const fork = require('child-process').fork;
 let mainWindow
 
 function createWindow () {
-  // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // REMOVE /dist WHEN READY TO DEPLOY
@@ -41,4 +41,29 @@ app.on('activate', function () {
   if (mainWindow === null) {
     createWindow()
   }
+
+  mainWindow.webContents.on('did-finish-load', () => {
+  console.log('loaded')
+  })
+});
+
+ipcMain.on('term-input', function(event, input) {
+  console.log(input)
+  exec(input, function(error, stdout, stderr) {
+    console.log('stdout: ', stdout);
+    event.sender.send('reply', stdout)
+  });
+  // var foo = exec(input);
+  // foo.stdout.on('data', function(data) {
+  //   console.log('stdout: ', stdout)
+  //   event.sender.send(stdout)
+  // });
+  // foo.stderr.on('data', function(data) {
+  //   console.log('stderr: ', stderr)
+  // })
+  // foo.on('close', function(code) {
+  //   console.log('closing code: ', code)
+  // })
+
+
 })

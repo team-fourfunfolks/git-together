@@ -26,6 +26,9 @@ class Term extends Component {
 		term.prompt();
 
 		ipcRenderer.on('reply', (event, stdout) => {
+			for (var i = 0; i < stdout.length; i++) {
+				if (stdout[i] === '\n') console.log('\n')
+			}
 			term.write(stdout);
 			term.prompt();
 		})
