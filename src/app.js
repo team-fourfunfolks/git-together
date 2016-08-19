@@ -8,6 +8,10 @@ import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
 // let socket = io('http://localhost:3000');
 
+
+
+
+
 class App extends Component {
 	constructor(props) {
 		super(props);
@@ -40,6 +44,7 @@ class App extends Component {
 		// 	console.log(data);
 		// });
 		this.socket.on('test', this.handleData);
+
 
   }
 
