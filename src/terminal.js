@@ -23,22 +23,14 @@ class Term extends Component {
 		// term.on('data', function(input) {
 		// 	ipcRenderer.send('term-input', input)
 		// })
-		
-
-
 		term.prompt();
-
-		let str = '';
-
-		term.on('data', function(input) {
-			str += input;
-		})
 
 		ipcRenderer.on('reply', (event, arg) => {
 			term.write(arg);
 			term.prompt();
 		})
 
+		let str = '';
 
 		term.on('key', function(key, ev) {
 			var printable = (
@@ -46,17 +38,21 @@ class Term extends Component {
 			);
 			if (ev.keyCode === 13) {
 				term.prompt();
-				console.log(str)
-				
+				console.log(str)				
 				ipcRenderer.send('term-input', str)
-				str = ''				
+				str = '';
+				console.log(str)			
 			}
-      else if (ev.keyCode === 8) {
+      		else if (ev.keyCode === 8) {
+		  		if (str.length) {
+			  	str = str.substring(0, str.length - 1)
 				if (term.x > 2) {
 				term.write('\b \b');
+				}
 			}
 			} else if (printable) {
-			term.write(key);
+				str += key;
+				term.write(key);
 			}
 		})
 
