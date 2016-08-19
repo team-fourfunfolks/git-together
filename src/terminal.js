@@ -10,9 +10,11 @@ const Terminal = React.createClass({
 		return (
 			<div className="panel panel-default terminal-container">
 				<div className="panel-heading">
-					<h5 className="panel-title">Terminal Container Test</h5>
+					<h5 className="panel-title">Terminal Container</h5>
 				</div>
-				<div className="panel-body"></div>
+				<div className="panel-body">
+    		{/* terminal display will go in this div */}
+    		</div>
 			</div>
 		)
 	}

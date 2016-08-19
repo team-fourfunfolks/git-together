@@ -7,29 +7,29 @@ body {
 	font-family: 'Titillium Web', sans-serif;
   overflow-y: hidden;
 	margin: 30px;
+	text-align: center;
 }
 
 .containing-div-all {
-	text-align: center; 
-}
-.containing-div {
 	h1 {
-		font-family: 'Titillium Web', sans-serif;
-		color: white;
 		letter-spacing: 2px;
 	}
 	text-align: center;
-	height: 100vh;
-	width: 70%;
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 30px;
 }
+.containing-div {
+	height: 100vh;
+	width: 100%;
+}
+
 .terminal-container {
 	height: 33%;
 }
 .commits-container {
 	height: 45%;
-}
-.p {
-
 }
 .panel-default {
 	background: rgba(255, 255, 255, 0.2);
@@ -48,7 +48,8 @@ body {
 	}
 }
 .panel-default > .panel-body {
-	font-family: 'Scope One', serif;
-	overflow: auto;
-
+	height: calc(100vh - 400px);
+	overflow-y: auto;
+	font-size: .9em;
+	text-align: left;
 }

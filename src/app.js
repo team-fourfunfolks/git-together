@@ -12,6 +12,7 @@ import io from 'socket.io-client';
 let Visualization = require ('./visualization');
 let Terminal = require ('./terminal');
 
+
 class App extends Component {
 	constructor(props) {
 		super(props);
@@ -45,59 +46,26 @@ class App extends Component {
 		// });
 		this.socket.on('test', this.handleData);
 
+
   }
 
 	handleData(dataObj) {
 		let data = JSON.parse(dataObj);
 		console.log("handledata", data);
-		// console.log("this state: " +this.state.message);
 		this.setState({ message: this.state.message.concat(data) });
 	}
 
 	render() {
-		// this.socket.on('test', function(data) {
-		// 	console.log('test in did mount in socket' + data);
-		// });
-	// 	console.log("in render: "+this.state.message)
-	// 	let commit;
-	// 		if (this.state.message !== []) {
-	// 		let obj = this.state.message;
-	// 		commit = obj.map(function(info, i){
-	// 			return (
-	// 				<div key={i}>
-	// 					<p><b>{ info.name }:</b> { info.message }</p>
-	//     		</div>
-	// 			)
-	// 		});
-	// 	}
-	// else commit = null;
-
     return (
 			<div className="containing-div-all">
 				<h1>GIT TOGETHER</h1>
       		<div className="containing-div">
-						{/* <div className="panel panel-default commits-container">
-							<div className="panel-heading">
-								<h5 className="panel-title">Commit Visualization</h5>
-							</div>
-							<div className="panel-body"> { commit } </div>
-       			</div> */}
 						<Visualization message={ this.state.message } />
-
-						{/* <div className="panel panel-default terminal-container">
-							<div className="panel-heading">
-								<h5 className="panel-title">Terminal Container</h5>
-							</div>
-							<div className="panel-body"></div>
-       			</div> */}
 						<Terminal />
-      			</div>
-						</div>
+      		</div>
+			</div>
     );
 	}
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('app')
-);
+ReactDOM.render(<App />, document.getElementById('app'));
