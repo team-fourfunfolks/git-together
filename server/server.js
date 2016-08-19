@@ -35,7 +35,7 @@ app.use(express.static('./dist'));
 
 console.log("Polling server is running at 'http://localhost:3000'");
 
-
+// Express test
 app.get('/', function(req, res) {
   res.send('hello');
 });
@@ -44,7 +44,8 @@ app.get('/', function(req, res) {
 io.sockets.on('connection', function (socket) {
   console.log("connected on backend");
 
-  socket.on("echo", function (msg, callback) {
+  // Socket test
+  socket.once("echo", function (msg, callback) {
     socket.emit("echo", msg);
   });
 });
