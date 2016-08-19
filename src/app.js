@@ -6,11 +6,11 @@ import '../scss/main.scss';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
-// import { Button } from 'react-bootstrap';
-// let socket = io('http://localhost:3000');
-// import Visualization from './visualization';
+
 let Visualization = require ('./visualization');
 let Terminal = require ('./terminal');
+
+const {ipcRenderer} = require('electron');
 
 
 class App extends Component {
@@ -27,8 +27,9 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-    this.socket = io('https://fa663fef.ngrok.io');
+    this.socket = io('http://localhost:3000');
     this.socket.on('connect', this.connect);
+
     // this.socket.on('disconnect', this.disconnect.bind(this));
 	}
 
@@ -45,6 +46,7 @@ class App extends Component {
 		// 	console.log(data);
 		// });
 		this.socket.on('test', this.handleData);
+
 
 
   }

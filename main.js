@@ -1,5 +1,9 @@
 const electron = require('electron')
 const readGit = require('./src/localGitAccess/localGitREAD');
+const child = require('child_process');
+const {ipcMain} = require('electron');
+
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -42,5 +46,3 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
-readGit.getLatestLogMessage();
