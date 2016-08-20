@@ -1,17 +1,27 @@
 import React, { Component } from 'react';
+
 import ReactDOM from 'react-dom';
+//import Terminal from 'xterm';
 
 class Term extends Component {
-
-
 	componentDidMount() {
 		this.loadTerminal(ReactDOM.findDOMNode(this))
+		
 	}
 
 	loadTerminal(node) { 
+		const DOMelm = document.getElementById('terminal');
+		const termHeight = DOMelm.offsetHeight;
+		console.log(termHeight)
+		const termWidth =  DOMelm.offsetWidth;
+		console.log(termWidth)
 		const term = new Terminal({
 		});
 		term.cursorBlink = true;
+		term.width = termWidth;
+		term.height = termHeight;
+		//term.rows = termHeight / 10;
+		//term.cols = Math.floor(termWidth / 5)
 		term.open(node);
 		ipcRenderer.once('terminal-start', (event, arg) => {
 			term.write(arg)
@@ -20,15 +30,10 @@ class Term extends Component {
 		term.prompt =  () => {
     		term.write('\r\n' + '$ ');
   		};
-		// term.on('data', function(input) {
-		// 	ipcRenderer.send('term-input', input)
-		// })
+		  
 		term.prompt();
 
 		ipcRenderer.on('reply', (event, stdout) => {
-			for (var i = 0; i < stdout.length; i++) {
-				if (stdout[i] === '\n') console.log('\n')
-			}
 			term.write(stdout);
 			term.prompt();
 		})
@@ -57,41 +62,16 @@ class Term extends Component {
 			}
 		})
 
-    term.on('paste', function (data, ev) {
-    term.write(data);
+		term.on('paste', function (data, ev) {
+    	term.write(data);
   });
-}
-	
-	render () {
-		//let term = new terminal();
-		//term.fit();
+	}
+
+	render() {
 		return (
-			<div id="terminal" style={{backgroundColor: "#000", color: '#ddd'}} >
+			<div id="terminal" className="terminal-container" style={{backgroundColor: "#000", color: '#fff'}} >
 			</div>
 		)
 	}
 }
-
 export default Term
-
-
-// const Terminal = React.createClass({
-// 	// propTypes: {
-// 	// },
-
-// 	render() {
-
-// 		return (
-// 			<div className="panel panel-default terminal-container">
-// 				<div className="panel-heading">
-// 					<h5 className="panel-title">Terminal Container</h5>
-// 				</div>
-// 				<div className="panel-body">
-//     		{/* terminal display will go in this div */}
-//     		</div>
-// 			</div>
-// 		)
-// 	}
-// });
-
-// module.exports = Terminal;
