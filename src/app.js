@@ -5,10 +5,11 @@ import '../scss/main.scss';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import Term from './terminal.js'
 import io from 'socket.io-client';
 
-let Visualization = require ('./visualization');
-let Terminal = require ('./terminal');
+import Visualization from './visualization.js';
+//let Terminal = require ('./terminal');
 
 const {ipcRenderer} = require('electron');
 
@@ -46,9 +47,6 @@ class App extends Component {
 		// 	console.log(data);
 		// });
 		this.socket.on('test', this.handleData);
-
-
-
   }
 
 	handleData(dataObj) {
@@ -61,11 +59,12 @@ class App extends Component {
     return (
 			<div className="containing-div-all">
 				<h1>GIT TOGETHER</h1>
-      		<div className="containing-div">
+      			<div className="containing-div">
 						<Visualization message={ this.state.message } />
-						<Terminal />
+						<Term />
+				</div>
       		</div>
-			</div>
+
     );
 	}
 }

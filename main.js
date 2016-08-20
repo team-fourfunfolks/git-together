@@ -2,7 +2,7 @@ const electron = require('electron')
 const readGit = require('./src/localGitAccess/localGitREAD');
 const child = require('child_process');
 const {ipcMain} = require('electron');
-
+const exec = child.exec;
 
 // Module to control application life.
 const app = electron.app
@@ -45,4 +45,12 @@ app.on('activate', function () {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.on('term-input', function(event, input) {
+  console.log('input rec')
+  exec(input, function (error, stdout, stderr) {
+    console.log(stdout)
+    event.sender.send('reply', stdout)
+  })
 })
